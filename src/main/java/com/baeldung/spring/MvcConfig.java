@@ -2,8 +2,6 @@ package com.baeldung.spring;
 
 import java.util.Locale;
 
-import com.baeldung.validation.EmailValidator;
-import com.baeldung.validation.PasswordMatchesValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
@@ -24,6 +22,11 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
+import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
+
+import com.baeldung.validation.EmailValidator;
+import com.baeldung.validation.PasswordMatchesValidator;
 
 @Configuration
 @ComponentScan(basePackages = { "com.baeldung.web" })
@@ -112,5 +115,17 @@ public class MvcConfig implements WebMvcConfigurer {
     @Bean
     WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> enableDefaultServlet() {
         return (factory) -> factory.setRegisterDefaultServlet(true);
+    }
+    
+    @Bean
+    public ClassLoaderTemplateResolver secondaryTemplateResolver() {
+        ClassLoaderTemplateResolver secondaryTemplateResolver = new ClassLoaderTemplateResolver();
+        secondaryTemplateResolver.setPrefix("private/");
+        secondaryTemplateResolver.setSuffix(".html");
+        secondaryTemplateResolver.setTemplateMode(TemplateMode.HTML);
+        secondaryTemplateResolver.setCharacterEncoding("UTF-8");
+        secondaryTemplateResolver.setOrder(1);
+        secondaryTemplateResolver.setCheckExistence(true);
+        return secondaryTemplateResolver;
     }
 }
