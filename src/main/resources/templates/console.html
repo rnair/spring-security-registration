@@ -19,6 +19,11 @@
 	
     <h1>This is the landing page for the admin</h1>
     
+
+	<div sec:authorize="hasAuthority('MANAGE_PRIVILEGE')">
+			This link is only visible to a manager <a th:href="@{/management}">Management</a>
+	</div>
+	
     <div sec:authorize="hasAuthority('READ_PRIVILEGE')">This text is only visible to a user</div>
           
     <div sec:authorize="hasAuthority('WRITE_PRIVILEGE')"> This text is only visible to an admin</div>
@@ -29,8 +34,8 @@
       <br/>
       <br/>
       <br/>
-      
-      <div th:if="${#authentication.principal.using2FA}">
+
+	  <div th:if="${#authentication.principal.using2FA}">
         You are using Two-step authentication <a href="#" class="btn btn-primary" onclick="disable2FA()">Disable 2FA</a> 
       </div>
         
